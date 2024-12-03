@@ -24,9 +24,9 @@ if(isset($_POST['loginUser'])) {
     <h1>Se connecter</h1>
 
     <?php
-        foreach ($errors as $errors) {?>
+        foreach ($errors as $error) {?>
             <div class="alert alert-danger" role="alert">
-                <?= $errors ?>
+                <?= htmlspecialchars($error) ?>
             </div>
         <?php }
         ?>
@@ -41,7 +41,7 @@ if(isset($_POST['loginUser'])) {
             <input type="password" name="password" id="password" class="form-control">
         </div>
 
-        <input type="submit" name="loginUser" value="Connexion" class="btn btn-primary>
+        <input type="submit" name="loginUser" value="Connexion" class="btn btn-primary">
     </form>
 </div>
 

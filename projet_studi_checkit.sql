@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
--- Hôte : 127.0.0.1:3307
--- Généré le : sam. 30 nov. 2024 à 16:26
--- Version du serveur : 10.4.32-MariaDB
--- Version de PHP : 8.2.12
+-- Hôte : 127.0.0.1:3306
+-- Généré le : lun. 06 mai 2024 à 18:41
+-- Version du serveur : 5.7.36
+-- Version de PHP : 8.0.13
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données : `projet_studi_checkit`
+-- Base de données : `studi_checkit`
 --
 
 -- --------------------------------------------------------
@@ -27,19 +27,34 @@ SET time_zone = "+00:00";
 -- Structure de la table `category`
 --
 
-CREATE TABLE `category` (
-  `id` int(10) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `category`;
+CREATE TABLE IF NOT EXISTS `category` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `icon` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `icon` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Déchargement des données de la table `category`
 --
 
 INSERT INTO `category` (`id`, `name`, `icon`) VALUES
-(1, 'Voyage', 'travel'),
-(2, 'Travail', 'work');
+(1, 'Voyage', 'bi-suitcase-lg-fill'),
+(2, 'Travail', 'bi-person-workspace');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `customer`
+--
+
+DROP TABLE IF EXISTS `customer`;
+CREATE TABLE IF NOT EXISTS `customer` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -47,12 +62,30 @@ INSERT INTO `category` (`id`, `name`, `icon`) VALUES
 -- Structure de la table `item`
 --
 
-CREATE TABLE `item` (
-  `id` int(10) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `item`;
+CREATE TABLE IF NOT EXISTS `item` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `status` tinyint(1) NOT NULL,
-  `list_id` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `list_id` int(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `item_ibfk_1` (`list_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4;
+
+--
+-- Déchargement des données de la table `item`
+--
+
+INSERT INTO `item` (`id`, `name`, `status`, `list_id`) VALUES
+(1, 'Préparer l\'itinéraire', 1, 1),
+(2, 'Préparer le sac', 1, 1),
+(6, 'Prendre les documents (carte identité, passeport, test)', 0, 1),
+(13, 'test 1', 1, 2),
+(14, 'test2', 1, 2),
+(15, 'test 3', 0, 2),
+(16, 'abc 1', 0, 3),
+(17, 'abc 2', 0, 3),
+(18, 'abc 3', 1, 3);
 
 -- --------------------------------------------------------
 
@@ -60,12 +93,25 @@ CREATE TABLE `item` (
 -- Structure de la table `list`
 --
 
-CREATE TABLE `list` (
-  `id` int(10) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `list`;
+CREATE TABLE IF NOT EXISTS `list` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
   `user_id` int(10) UNSIGNED NOT NULL,
-  `category_id` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `category_id` int(10) UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `list_ibfk_1` (`category_id`),
+  KEY `list_ibfk_2` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
+
+--
+-- Déchargement des données de la table `list`
+--
+
+INSERT INTO `list` (`id`, `title`, `user_id`, `category_id`) VALUES
+(1, 'Voyage en Italie', 1, 1),
+(2, 'Voyage à Rome', 1, 1),
+(3, 'Projet Php CheckIT', 1, 2);
 
 -- --------------------------------------------------------
 
@@ -73,78 +119,21 @@ CREATE TABLE `list` (
 -- Structure de la table `user`
 --
 
-CREATE TABLE `user` (
-  `id` int(10) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE IF NOT EXISTS `user` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `nickname` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `password` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Déchargement des données de la table `user`
 --
 
 INSERT INTO `user` (`id`, `nickname`, `email`, `password`) VALUES
-(1, 'test', 'test@test.com', 'test');
-
---
--- Index pour les tables déchargées
---
-
---
--- Index pour la table `category`
---
-ALTER TABLE `category`
-  ADD PRIMARY KEY (`id`);
-
---
--- Index pour la table `item`
---
-ALTER TABLE `item`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `list_id` (`list_id`);
-
---
--- Index pour la table `list`
---
-ALTER TABLE `list`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `category_id` (`category_id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Index pour la table `user`
---
-ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT pour les tables déchargées
---
-
---
--- AUTO_INCREMENT pour la table `category`
---
-ALTER TABLE `category`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT pour la table `item`
---
-ALTER TABLE `item`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table `list`
---
-ALTER TABLE `list`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table `user`
---
-ALTER TABLE `user`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+(1, 'test', 'test@test.com', '$2y$10$bZI0Vz2H9.EwrN/rfPIgP.P0f8tlh5X9PrzNaZl9GJ7qhjgUjQwgG');
 
 --
 -- Contraintes pour les tables déchargées
@@ -154,14 +143,14 @@ ALTER TABLE `user`
 -- Contraintes pour la table `item`
 --
 ALTER TABLE `item`
-  ADD CONSTRAINT `item_ibfk_1` FOREIGN KEY (`list_id`) REFERENCES `list` (`id`);
+  ADD CONSTRAINT `item_ibfk_1` FOREIGN KEY (`list_id`) REFERENCES `list` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `list`
 --
 ALTER TABLE `list`
-  ADD CONSTRAINT `list_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`),
-  ADD CONSTRAINT `list_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+  ADD CONSTRAINT `list_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `list_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -1,17 +1,17 @@
-<?php 
+<?php
 
-require_once __DIR__. "/templates/header.php"; 
-require_once __DIR__. "/lib/pdo.php"; 
-require_once __DIR__. "/lib/user.php"; 
-require_once __DIR__. "/lib/session.php"; 
+require_once __DIR__ . "/templates/header.php";
+require_once __DIR__ . "/lib/pdo.php";
+require_once __DIR__ . "/lib/user.php";
+require_once __DIR__ . "/lib/session.php";
 
 $errors = []; // Initialisation de la variable $errors
 
 
-if(isset($_POST['loginUser'])) {
+if (isset($_POST['loginUser'])) {
     $user = verifyUserLoginPassword($pdo, $_POST['email'], $_POST['password']);
 
-    if($user) {
+    if ($user) {
         $_SESSION['user'] = $user;
         header('Location: index.php');
     } else {
@@ -24,12 +24,12 @@ if(isset($_POST['loginUser'])) {
     <h1>Se connecter</h1>
 
     <?php
-        foreach ($errors as $error) {?>
-            <div class="alert alert-danger" role="alert">
-                <?= htmlspecialchars($error) ?>
-            </div>
-        <?php }
-        ?>
+    foreach ($errors as $error) { ?>
+        <div class="alert alert-danger" role="alert">
+            <?= htmlspecialchars($error) ?>
+        </div>
+    <?php }
+    ?>
 
     <form action="" method="post">
         <div class="mb-3">
@@ -45,4 +45,4 @@ if(isset($_POST['loginUser'])) {
     </form>
 </div>
 
-<?php require_once __DIR__. "/templates/footer.php" ?>
+<?php require_once __DIR__ . "/templates/footer.php" ?>

@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__. "/lib/user.php"; 
+
 
 function verifyUserLoginPassword(PDO $pdo, string $email, string $password):bool|array
 {
